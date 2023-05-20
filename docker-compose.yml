@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www/html:delegated
+    depends_on:
+      - php
+      - redis
+      - mysql
+    networks:
+      - ratings
+
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ratings
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_secret
+      MYSQL_ROOT_PASSWORD: db_secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - ratings
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    ports:
+        - "9001:9000"
+    volumes:
+      - ./backend:/var/www/html:delegated
+    networks:
+      - ratings
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ratings
+
+  composer:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html:delegated
+    depends_on:
+      - php
+    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    networks:
+      - ratings
+
+  npm:
+    image: node:current-alpine
+    volumes:
+      - ./frontend:/var/www/html
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "5173:5173"
+    working_dir: /var/www/html
+    entrypoint: [ 'npm' ]
+    networks:
+      - ratings
+
+  artisan:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html:delegated
+    depends_on:
+      - mysql
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
+    networks:
+      - ratings
+
+networks:
+  ratings:
