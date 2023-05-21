@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./backend:/var/www/html:delegated
+      - ./backend:/var/www/html
     depends_on:
       - php
       - redis
@@ -20,6 +20,7 @@ services:
     image: mysql
     ports:
       - "3306:3306"
+    restart: always
     environment:
       MYSQL_DATABASE: ratings
       MYSQL_USER: db_user
@@ -37,7 +38,7 @@ services:
     ports:
         - "9001:9000"
     volumes:
-      - ./backend:/var/www/html:delegated
+      - ./backend:/var/www/html
     networks:
       - ratings
 
@@ -53,7 +54,7 @@ services:
       context: ./docker/php
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/var/www/html:delegated
+      - ./backend:/var/www/html
     depends_on:
       - php
     entrypoint: [ 'composer', '--ignore-platform-reqs' ]
@@ -61,6 +62,7 @@ services:
       - ratings
 
   npm:
+    container_name: frontend
     image: node:current-alpine
     volumes:
       - ./frontend:/var/www/html
@@ -78,7 +80,7 @@ services:
       context: ./docker/php
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/var/www/html:delegated
+      - ./backend:/var/www/html
     depends_on:
       - mysql
     entrypoint: [ 'php', '/var/www/html/artisan' ]
