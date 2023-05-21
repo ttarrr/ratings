@@ -4,12 +4,17 @@ start: stop
 stop:
 	docker-compose down -v --remove-orphans
 
-seed:
+migrate:
 	docker-compose run --rm artisan migrate:refresh --path=app/Rating/Infrastructure/Database/Migrations --force
+
+seed:
 	docker-compose run --rm artisan db:seed --class=App\\Rating\\Infrastructure\\Database\\Seeders\\RatingSeeder
 
 tinker:
 	docker-compose run --rm artisan tinker
+
+test:
+	docker-compose run --rm artisan test
 
 run_frontend:
 	docker-compose run --rm --service-ports npm run start

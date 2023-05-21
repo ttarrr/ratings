@@ -24,19 +24,33 @@ class Rating extends Model
         'photo',
     ];
 
-    public static function rules(): array
-    {
-        return [
-            'email' => ['required', 'email'],
-            'user_name' => ['required', 'string'],
-            'rating' => ['required', 'integer', 'min:0', 'max:5'],
-            'comment' => ['required', 'string'],
-            'photo' => ['nullable', 'image'],
-        ];
-    }
-
     public static function newFactory(): Factory
     {
         return RatingFactory::new();
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getUserName(): string
+    {
+        return $this->user_name;
+    }
+
+    public function getRating(): int
+    {
+        return $this->rating;
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
     }
 }

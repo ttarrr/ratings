@@ -28,43 +28,43 @@ class CreateRatingMutation extends Mutation
                 'name' => 'email',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'Email',
+                'rules' => ['required', 'email']
             ],
             'user_name' => [
                 'name' => 'user_name',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'User Name',
+                'rules' => ['required', 'string']
             ],
             'rating' => [
                 'name' => 'rating',
                 'type' => Type::nonNull(Type::int()),
                 'description' => 'Rating Value',
+                'rules' => ['required', 'integer', 'min:0', 'max:5']
             ],
             'comment' => [
                 'name' => 'comment',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'Comment',
+                'rules' => ['required', 'string']
             ],
             'photo' => [
                 'name' => 'photo',
                 'type' => Type::string(),
                 'description' => 'Photo',
+                'rules' => ['nullable', 'image']
             ],
         ];
     }
 
-    /**
-     * @throws ValidationError
-     */
     public function resolve($root, $args): Rating
     {
-        $validatedArgs = $this->validate($args);
-
         $rating = new Rating([
-            'email' => $validatedArgs['email'],
-            'user_name' => $validatedArgs['user_name'],
-            'rating' => $validatedArgs['rating'],
-            'comment' => $validatedArgs['comment'],
-            'photo' => $validatedArgs['photo'] ?? null,
+            'email' => $args['email'],
+            'user_name' => $args['user_name'],
+            'rating' => $args['rating'],
+            'comment' => $args['comment'],
+            'photo' => $args['photo'] ?? null,
         ]);
 
         $rating->save();
@@ -75,14 +75,12 @@ class CreateRatingMutation extends Mutation
     /**
      * @throws ValidationError
      */
-    private function validate(array $args): array
+    protected function validateArguments(array $arguments, array $rules): void
     {
-        $validator = Validator::make($args, Rating::rules());
+        $validator = $this->getValidator($arguments, $rules);
 
         if ($validator->fails()) {
             throw new ValidationError($validator->errors(), $validator);
         }
-
-        return $args;
     }
 }

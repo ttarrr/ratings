@@ -5,7 +5,6 @@ namespace App\Rating\Infrastructure\GraphQL\Queries;
 use App\Rating\Domain\Entities\Rating;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Validator;
 use Rebing\GraphQL\Error\ValidationError;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
