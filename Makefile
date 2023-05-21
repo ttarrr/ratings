@@ -34,4 +34,4 @@ clear_cache:
 	docker-compose run --rm composer dump-autoload
 
 build_frontend:
-	docker-compose run --rm npm install
+	docker-compose run --rm npm install --force

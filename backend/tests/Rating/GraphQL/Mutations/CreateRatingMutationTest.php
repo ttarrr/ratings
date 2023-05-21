@@ -25,7 +25,13 @@ class CreateRatingMutationTest extends TestCase
                             photo
                         }
                     }',
-            'variables' => $data,
+            'variables' => [
+                'email' => 'example@example.com',
+                'user_name' => 'John Doe',
+                'rating' => 5,
+                'comment' => 'Great service!',
+                'photo' => null,
+            ],
         ]);
 
         $response->assertStatus(200)
