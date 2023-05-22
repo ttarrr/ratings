@@ -27,7 +27,8 @@ install:
 	docker-compose run --rm composer install --optimize-autoloader && \
 	rm -f ./backend/.env && \
 	cp ./backend/.env.example ./backend/.env && \
-    docker-compose run --rm artisan key:generate
+    docker-compose run --rm artisan key:generate && \
+    docker-compose run --rm artisan storage:link
 
 clear_cache:
 	docker-compose run --rm artisan optimize:clear

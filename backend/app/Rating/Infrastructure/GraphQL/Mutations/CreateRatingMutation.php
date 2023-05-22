@@ -3,7 +3,10 @@
 namespace App\Rating\Infrastructure\GraphQL\Mutations;
 
 use GraphQL\Type\Definition\Type;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Rebing\GraphQL\Error\ValidationError;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Mutation;
@@ -50,21 +53,26 @@ class CreateRatingMutation extends Mutation
             ],
             'photo' => [
                 'name' => 'photo',
-                'type' => Type::string(),
+                'type' => GraphQL::type('Upload'),
                 'description' => 'Photo',
-                'rules' => ['nullable', 'image']
+                'rules' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:5000']
             ],
         ];
     }
 
     public function resolve($root, $args): Rating
     {
+        $photoUrl = null;
+        if (isset($args['photo'])) {
+            $photoUrl = $this->storePhoto($args['photo']);
+        }
+
         $rating = new Rating([
             'email' => $args['email'],
             'user_name' => $args['user_name'],
             'rating' => $args['rating'],
             'comment' => $args['comment'],
-            'photo' => $args['photo'] ?? null,
+            'photo' => $photoUrl,
         ]);
 
         $rating->save();
@@ -82,5 +90,21 @@ class CreateRatingMutation extends Mutation
         if ($validator->fails()) {
             throw new ValidationError($validator->errors(), $validator);
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function storePhoto (UploadedFile $upload): string
+    {
+        $extension = $upload->getClientOriginalExtension();
+        $filename = time().'_'.Str::random(10).'.'.$extension;
+        $storeSuccessful = Storage::disk('public')->put($filename, file_get_contents($upload));
+
+        if (!$storeSuccessful) {
+            throw new \Exception('Failed to store uploaded photo.');
+        }
+
+        return Storage::disk('public')->url($filename);
     }
 }

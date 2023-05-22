@@ -13,7 +13,7 @@ return [
 
         // Any middleware for the graphql route group
         // This middleware will apply to all schemas
-        'middleware' => ['cors'],
+        'middleware' => [],
 
         // Additional route group attributes
         //
@@ -106,7 +106,7 @@ return [
     'types' => [
         // ExampleType::class,
         // ExampleRelationType::class,
-        // \Rebing\GraphQL\Support\UploadType::class,
+        \Rebing\GraphQL\Support\UploadType::class,
     ],
 
     // The types will be loaded on demand. Default is to load all types on each request
