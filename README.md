@@ -1,3 +1,7 @@
+
+https://github.com/ttarrr/ratings/assets/83187866/f9c7713e-b402-4dab-8416-c83eb13d77f2
+
+
 # Ratings
 Ratings is a test application built with Laravel, GraphQL, and React. It provides functionality to create ratings and view a ratings list.
 
