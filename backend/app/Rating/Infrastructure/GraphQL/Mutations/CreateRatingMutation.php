@@ -5,7 +5,6 @@ namespace App\Rating\Infrastructure\GraphQL\Mutations;
 use GraphQL\Type\Definition\Type;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Rebing\GraphQL\Error\ValidationError;
 use Rebing\GraphQL\Support\Facades\GraphQL;
