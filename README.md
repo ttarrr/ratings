@@ -11,7 +11,7 @@ To set up the Ratings application, follow these steps:
 1. Clone this repository to your local machine:
 
 ```
-git clone <repository_url>
+git clone https://github.com/ttarrr/ratings.git Ratings
 ```
 2. Build the application dependencies by running the following command:
 ```

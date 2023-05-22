@@ -9,6 +9,7 @@ export const GET_RATINGS = gql`
             rating
             comment
             photo
+            created_at
         }
     }
 `;
